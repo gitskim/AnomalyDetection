@@ -22,39 +22,41 @@ def reshape_into_sliding_windows(X, windowSize, advanceSamples=1):
 
     return outputMatrix
 
+
 trainingData = np.load('data/2018-01-01__2019-01-01__NConservatory_npWeekdayAllOrderedSensorsTimeRef.npy')
 
 import torch, torch.nn as nn, time
 from torch.utils.data import Dataset, DataLoader
 import torch.nn as nn
 
-dataLoaderTrain = DataLoader( trainingData.astype('float32'),
-                                 batch_size = 16,
-                                 shuffle = True )
+dataLoaderTrain = DataLoader(trainingData.astype('float32'),
+                             batch_size=16,
+                             shuffle=True)
 
-dataLoaderTest = DataLoader( trainingData.astype('float32'),
-                                 batch_size = 1,
-                                 shuffle = False )
-
+dataLoaderTest = DataLoader(trainingData.astype('float32'),
+                            batch_size=1,
+                            shuffle=False)
 
 inputDimensionality = trainingData.shape[1]
 hidden_size = inputDimensionality // 2
 num_layers = 256
 dropout = 0.2
-model = nn.Sequential (
-    nn.LSTM(input_size=inputDimensionality, hidden_size=hidden_size, num_layers=num_layers, bidirectional=False, dropout=dropout),
-#     nn.LSTM(input_size=inputDimensionality//2, hidden_size=hidden_size, num_layers=num_layers)
-#     nn.LSTM(input_size=inputDimensionality//4, hidden_size=hidden_size, num_layers=num_layers)
-#     nn.LSTM(input_size=inputDimensionality//10, hidden_size=hidden_size, num_layers=num_layers)
-#     nn.LSTM(input_size=inputDimensionality//4, hidden_size=hidden_size, num_layers=num_layers)
+model = nn.Sequential(
+    nn.LSTM(input_size=inputDimensionality, hidden_size=hidden_size, num_layers=num_layers, bidirectional=False,
+            dropout=dropout),
+    #     nn.LSTM(input_size=inputDimensionality//2, hidden_size=hidden_size, num_layers=num_layers)
+    #     nn.LSTM(input_size=inputDimensionality//4, hidden_size=hidden_size, num_layers=num_layers)
+    #     nn.LSTM(input_size=inputDimensionality//10, hidden_size=hidden_size, num_layers=num_layers)
+    #     nn.LSTM(input_size=inputDimensionality//4, hidden_size=hidden_size, num_layers=num_layers)
     nn.LSTM(input_size=hidden_size, hidden_size=inputDimensionality, num_layers=num_layers)
-#     nn.Linear(inputDimensionality, inputDimensionality//2), nn.Sigmoid(),
-#     nn.Linear(inputDimensionality//2, inputDimensionality//4), nn.Sigmoid(),
-#     nn.Linear(inputDimensionality//4, inputDimensionality//10), nn.Sigmoid(),
-#     nn.Linear(inputDimensionality//10, inputDimensionality//4), nn.Sigmoid(),
-#     nn.Linear(inputDimensionality//4, inputDimensionality//2), nn.Sigmoid(),
-#     nn.Linear(inputDimensionality//2, inputDimensionality)
+    #     nn.Linear(inputDimensionality, inputDimensionality//2), nn.Sigmoid(),
+    #     nn.Linear(inputDimensionality//2, inputDimensionality//4), nn.Sigmoid(),
+    #     nn.Linear(inputDimensionality//4, inputDimensionality//10), nn.Sigmoid(),
+    #     nn.Linear(inputDimensionality//10, inputDimensionality//4), nn.Sigmoid(),
+    #     nn.Linear(inputDimensionality//4, inputDimensionality//2), nn.Sigmoid(),
+    #     nn.Linear(inputDimensionality//2, inputDimensionality)
 )
+
 
 def train_model(model, dataLoader, targeDevice, nEpochs=10):
     # --model = model.to( targetDevice )
