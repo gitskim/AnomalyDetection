@@ -39,6 +39,7 @@ hidden_size = inputDimensionality // 2
 hidden_size2 = hidden_size // 2
 num_layers = 2
 dropout = 0.2
+hidden_s = [inputDimensionality, hidden_size]
 print(inputDimensionality)
 import torch.nn as nn
 
@@ -204,6 +205,7 @@ def train_model(model, dataLoader, targeDevice=0, nEpochs=10):
     lossHistory = []
 
     # training loop
+
     for iEpoch in range(nEpochs):
         cumulativeLoss = 0
         for i, iInputBatch in enumerate(dataLoader):
@@ -214,7 +216,8 @@ def train_model(model, dataLoader, targeDevice=0, nEpochs=10):
             optimizer.zero_grad()
 
             # generate predictions/reconstructions
-            predictions = model.forward(input=iInputBatch, hidden=124)
+            hidden = model.init_hidden(2112)
+            predictions = model.forward(input=iInputBatch, hidden=hidden)
 
             # compute error
             loss = lossFunction(predictions, iInputBatch)
